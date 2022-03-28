@@ -3468,7 +3468,8 @@ lines which match sage-shell:-prompt-regexp-no-eol are dropped from the output."
     (forward-line 0)
     (let ((int (or (cl-loop for str in sage-shell-interfaces:other-interfaces
                             if (looking-at (concat str ": ")) return str)
-                   (when (looking-at sage-shell:prompt-regexp)
+                   (when (or (looking-at sage-shell:prompt-regexp)
+                             (derived-mode-p #'sage-shell:sage-mode))
                      "sage"))))
       (if int
           (sage-shell-cpl:interface-trans int)))))
@@ -5060,6 +5061,13 @@ Othewise return nil."
                                                :state sage-int-state))))))
           (sage-shell:-eldoc-function state))))))
 
+(defun sage-shell-describe-at-point (symbol &optional process-buffer)
+  "Show the documentation for the current SYMBOL.
+Adapted from `python-describe-at-point'.
+Uses `sage-shell:process-buffer' as the default PROCESS-BUFFER."
+  (interactive (list (python-info-current-symbol)))
+  (with-current-buffer (or process-buffer sage-shell:process-buffer)
+    (sage-shell-help:describe-symbol symbol)))
 
 ;;; sage-shell:sage-mode
 ;;;###autoload
@@ -5068,7 +5076,7 @@ Othewise return nil."
   (set (make-local-variable 'eldoc-documentation-function)
        #'sage-shell-edit:eldoc-function)
   (add-hook 'completion-at-point-functions
-            'sage-shell-edit:completion-at-point-func nil t))
+            'sage-shell:completion-at-point-func nil t))
 
 (sage-shell:define-keys sage-shell:sage-mode-map
   "C-c C-c" 'sage-shell-edit:send-buffer
