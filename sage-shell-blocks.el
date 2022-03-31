@@ -131,6 +131,32 @@ Move to end of block sent."
 	  (sage-shell-blocks:send-current))
       (error "No sage-shell:sage-mode buffer found"))))
 
+(defun sage-shell-block:find-all ()
+  "Find all the blocks in the current buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((blocks nil)
+          (pos nil))
+      (while (setq pos (re-search-forward
+                        (rx line-start (literal sage-shell-blocks:delimiter))
+                        nil t))
+        (goto-char pos)
+        (push (string-trim (thing-at-point 'line t)
+                           (rx (0+ (or space (literal sage-shell-blocks:delimiter)))))
+              blocks))
+      blocks)))
+
+(defun sage-shell-block:send (block)
+  "Send the named BLOCK from the current buffer using completion."
+  (interactive
+   (list (completing-read "Send block: " (sage-shell-block:find-all) nil t)))
+  (save-excursion (goto-char (point-min))
+                  (when-let ((pos (re-search-forward
+                                   (rx line-start (literal sage-shell-blocks:delimiter)
+                                       (0+ space) (literal block)))))
+                    (goto-char pos)
+                    (sage-shell-blocks:send-current))))
+
 (provide 'sage-shell-blocks)
 
 ;;; sage-blocks.el ends here
