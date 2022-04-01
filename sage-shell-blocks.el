@@ -146,15 +146,22 @@ Move to end of block sent."
               blocks))
       blocks)))
 
+(defun sage-shell-block:goto (block)
+  "Goto the named BLOCK from the current buffer using completion."
+  (interactive
+   (list (completing-read "Send block: " (sage-shell-block:find-all) nil t)))
+  (when-let (pos (save-excursion
+                   (goto-char (point-min))
+                   (re-search-forward
+                    (rx line-start (literal sage-shell-blocks:delimiter)
+                        (0+ space) (literal block)))))
+    (goto-char pos)))
+
 (defun sage-shell-block:send (block)
   "Send the named BLOCK from the current buffer using completion."
   (interactive
    (list (completing-read "Send block: " (sage-shell-block:find-all) nil t)))
-  (save-excursion (goto-char (point-min))
-                  (when-let ((pos (re-search-forward
-                                   (rx line-start (literal sage-shell-blocks:delimiter)
-                                       (0+ space) (literal block)))))
-                    (goto-char pos)
+  (save-excursion (when (sage-shell-block:goto (block))
                     (sage-shell-blocks:send-current))))
 
 (provide 'sage-shell-blocks)
