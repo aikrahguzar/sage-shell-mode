@@ -161,7 +161,7 @@ Move to end of block sent."
   "Send the named BLOCK from the current buffer using completion."
   (interactive
    (list (completing-read "Send block: " (sage-shell-block:find-all) nil t)))
-  (save-excursion (when (sage-shell-block:goto (block))
+  (save-excursion (when (sage-shell-block:goto block)
                     (sage-shell-blocks:send-current))))
 
 (provide 'sage-shell-blocks)
