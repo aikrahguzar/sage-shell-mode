@@ -146,6 +146,7 @@ Move to end of block sent."
               blocks))
       blocks)))
 
+;;;###autoload
 (defun sage-shell-block:goto (block)
   "Goto the named BLOCK from the current buffer using completion."
   (interactive
@@ -157,6 +158,7 @@ Move to end of block sent."
                         (0+ space) (literal block)))))
     (goto-char pos)))
 
+;;;###autoload
 (defun sage-shell-block:send (block)
   "Send the named BLOCK from the current buffer using completion."
   (interactive
