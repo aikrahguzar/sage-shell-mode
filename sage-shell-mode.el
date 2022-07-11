@@ -5076,9 +5076,9 @@ Uses `sage-shell:process-buffer' as the default PROCESS-BUFFER."
   (set (make-local-variable 'eldoc-documentation-function)
        #'sage-shell-edit:eldoc-function)
   (add-hook 'completion-at-point-functions
-            'sage-shell-edit:completion-at-point-func nil t)
+            'sage-shell:completion-at-point-func t t)
   (add-hook 'completion-at-point-functions
-            'sage-shell:completion-at-point-func nil t))
+            'sage-shell-edit:completion-at-point-func nil t))
 
 (sage-shell:define-keys sage-shell:sage-mode-map
   "C-c C-c" 'sage-shell-edit:send-buffer

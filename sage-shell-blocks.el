@@ -94,10 +94,12 @@ Move to end of block sent."
 	 (backdelim (save-excursion
 		      (sage-shell-blocks:backward 1)
 		      (point)))
+         (proc-buf sage-shell:process-buffer)
 	 title)
     ;; Copy the region to a temp buffer.
     ;; Possibly change the first line if it contains a title
     (with-temp-buffer
+      (setq sage-shell:process-buffer proc-buf)
       (insert-buffer-substring this-buf backdelim enddelim)
       (goto-char (point-min))
       (when (looking-at sage-shell-blocks:delimiter)
